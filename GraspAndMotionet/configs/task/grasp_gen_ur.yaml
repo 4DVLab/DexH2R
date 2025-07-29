@@ -1,0 +1,52 @@
+# task: pose generation
+name: grasp_gen_ur
+lr: 1e-3
+eval_interval: 1
+eval_visualize: 1
+shuffle: true
+train:
+  batch_size: 860
+  num_workers: 8
+  num_epochs: 4000
+  log_step: 100
+
+test:
+  epoch: null
+  batch_size: 5
+  num_workers: 8
+
+dataset:
+
+  # DynamicGrasp
+  name: DynamicGrasp
+  use_mesh_model_surface_pcd: true
+  dataset_dir: ./../dataset/DexH2R_dataset/
+  # end
+
+  # # Dexgraspnet
+  # name: DexGraspNet
+  # dataset_dir: ./../dataset/DexGraspNet
+  # train_transforms: ['NumpyToTensor']
+  # test_transforms: ['NumpyToTensor']
+  # # end
+
+
+  use_e3m5_hand_model: true
+  normalize_x: true
+  normalize_x_trans: true
+  modeling_keys: ['allDoFs']
+  original_points_num: 4096
+  sample_points_num: 2048
+  device: cpu
+  use_color: false
+  use_normal: true
+  transform_cfg: {}
+
+visualizer:
+  name: YouZhuoGraspGenURVisualizer
+  ksample: 25 # sample k case in each case 20
+  vis_denoising: false # visualize denoising process
+  save_mesh: false
+  ## visualization config used in training
+  visualize: false
+  interval: 1

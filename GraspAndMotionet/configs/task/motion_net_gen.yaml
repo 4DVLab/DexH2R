@@ -1,0 +1,64 @@
+
+name: motion_gen
+# name: clear_motion_net
+lr: 5e-4
+eval_interval: 1
+eval_visualize: 1
+shuffle: false # train motion don't need to be shuffle``
+
+itp_mode: 5
+eval_task: train
+
+
+
+train:
+  batch_size: 300
+  num_workers: 8
+  num_epochs: 8000
+  log_step: 100
+
+test:
+  epoch: null
+  batch_size: 25
+  num_workers: 6
+
+dataset:
+
+  name: DynamicMotion
+  normalize_x: false
+  # normalize_x_trans: true
+  modeling_keys: ['allDoFs']
+  sample_points: 1024 # downsample point size
+  original_points_num: 4096 # original point size 
+  past_frames: 5
+  future_frames: 10
+  seq_center_align: true 
+  device: cpu 
+  use_normal: true
+  transform_cfg: {}
+  
+  use_grasp_seq: true
+  use_mesh_model_surface_pcd: false
+  load_kinect_pcd: true
+
+  downsample_num: 1 # skip frame num 
+
+  use_dexgraspanything_final_pose: false
+  use_mano_filter_cvae_collision_final_pose: false
+  use_mano_filter_dexgraspanything_collision_final_pose: false
+  use_cvae_final_pose: true
+
+  load_final_qpose: true
+
+
+
+visualizer:
+  name: YouZhuoGraspGenURVisualizer
+  ksample: 20 # sample k case in each case
+  vis_denoising: false # visualize denoising process
+  save_mesh: false
+  ## visualization config used in training
+  visualize: false
+  interval: 1
+
+

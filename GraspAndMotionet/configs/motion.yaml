@@ -1,0 +1,49 @@
+## config/default.yaml
+hydra:
+  run:
+    dir: ${exp_dir}
+  output_subdir: null
+
+defaults:
+  - _self_
+  - diffuser: null
+  - task: motion_net_gen
+  - model: motion_net
+  - optimizer: null
+  - planner: null
+
+
+
+
+use_pretrain: true
+
+# # motion net downsample 3
+
+# experiment_name: none
+# model_type: train_on_real_world_pcd 
+pretrain_model_dir_path: experiment_result/2025-07-11_20-40-38_motion_net_no_dropout_use_grasp
+pretrain_model_index: 369
+
+
+
+
+
+
+exp_name: motion_net
+
+output_dir: ./experiment_result
+
+exp_dir: ${output_dir}/${now:%Y-%m-%d_%H-%M-%S}_${exp_name}
+
+tb_dir: ${exp_dir}/tb_logs
+vis_dir: ${exp_dir}/visual
+ckpt_dir: ${exp_dir}/ckpts
+
+slurm: false
+gpu: 0
+
+## for saving model
+save_model_interval: 10
+
+
+viz_motion_output_dir: ./viz_motion_output

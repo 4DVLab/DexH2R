@@ -1,0 +1,121 @@
+name: fastgrasp
+
+task_name: fastgrasp
+
+shape_meta: &shape_meta
+  obs:
+    point_cloud:
+      shape: [4096, 3]
+      type: point_cloud
+    agent_pos:
+      shape: [28]
+      type: low_dim
+  action:
+    shape: [28]
+    type: low_dim
+
+dataset:
+  _target_: diffusion_policy_3d.dataset.ours_dataset.FastgraspDataset
+  normalizer: './normalizer/dp3_normalizer.pth'
+  zarr_path: ../../dataset/DiffusionPolicy_dataset/train/whole/train_val.zarr
+  horizon: ${horizon}
+  pad_before: ${eval:'${n_obs_steps}-1'}
+  pad_after: ${eval:'${n_action_steps}-1'}
+  seed: 42
+  val_ratio: 0.02
+  max_train_episodes: 5000
+  max_val_episodes: 1
+  max_test_episodes: 1000
+  velocity_as_obs: false
+  finalgrasp_as_obs: false
+  traj_num: 3509
+  train_mask_start: 0
+  train_mask_end: 2888
+  val_mask_start: 2888
+  val_mask_end: 3509
+
+  train_dataset_1:
+    _target_: diffusion_policy_3d.dataset.ours_dataset.FastgraspDataset
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_1.zarr
+    horizon: ${horizon}
+    pad_before: ${eval:'${n_obs_steps}-1'}
+    pad_after: ${eval:'${n_action_steps}-1'}
+    seed: 42
+    val_ratio: 0.02
+    max_train_episodes: 5000
+    max_val_episodes: 1
+    max_test_episodes: 1000
+    velocity_as_obs: false
+    finalgrasp_as_obs: false
+    traj_num: 963
+    train_mask_start: 0
+    train_mask_end: 963
+    val_mask_start: 0
+    val_mask_end: 0
+    test_mask_start: 0
+    test_mask_end: 0
+  train_dataset_2:
+    _target_: diffusion_policy_3d.dataset.ours_dataset.FastgraspDataset
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_2.zarr
+    horizon: ${horizon}
+    pad_before: ${eval:'${n_obs_steps}-1'}
+    pad_after: ${eval:'${n_action_steps}-1'}
+    seed: 42
+    val_ratio: 0.02
+    max_train_episodes: 5000
+    max_val_episodes: 1
+    max_test_episodes: 1000
+    velocity_as_obs: false
+    finalgrasp_as_obs: false
+    traj_num: 963
+    train_mask_start: 0
+    train_mask_end: 963
+    val_mask_start: 0
+    val_mask_end: 0
+    test_mask_start: 0
+    test_mask_end: 0
+  train_dataset_3:
+    _target_: diffusion_policy_3d.dataset.ours_dataset.FastgraspDataset
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_3.zarr
+    horizon: ${horizon}
+    pad_before: ${eval:'${n_obs_steps}-1'}
+    pad_after: ${eval:'${n_action_steps}-1'}
+    seed: 42
+    val_ratio: 0.02
+    max_train_episodes: 5000
+    max_val_episodes: 1
+    max_test_episodes: 1000
+    velocity_as_obs: false
+    finalgrasp_as_obs: false
+    traj_num: 963
+    train_mask_start: 0
+    train_mask_end: 963
+    val_mask_start: 0
+    val_mask_end: 0
+    test_mask_start: 0
+    test_mask_end: 0
+
+policy:
+  _target_: diffusion_policy_3d.policy.ours_policy.FastGraspPolicy
+  n_obs_steps: ${n_obs_steps}
+  n_action_steps: ${n_action_steps}
+  horizon: ${horizon}
+  device: ${training.device}
+  use_point_crop: ${eval:'${task.dataset.finalgrasp_as_obs}'}
+  shape_meta: *shape_meta
+
+env_runner:
+  _target_: diffusion_policy_3d.env_runner.ours_env_runner.FastGraspEnvRunner
+  eval_episodes: 20
+  n_obs_steps: ${n_obs_steps}
+  n_action_steps: ${n_action_steps}
+  horizon: ${horizon}
+  fps: 10
+  n_envs: null
+  n_train: null
+  n_test: null
+  task_name: ${task_name}
+  device: ${training.device}
+  use_point_crop: ${policy.use_point_crop}
+  velocity_as_obs: ${task.dataset.velocity_as_obs}
+  finalgrasp_as_obs: ${task.dataset.finalgrasp_as_obs}

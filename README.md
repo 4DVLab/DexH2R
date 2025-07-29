@@ -1,0 +1,88 @@
+# DexH2R
+Official code for "**DexH2R: A Benchmark for Dynamic Dexterous Grasping in Human-to-Robot Handover**" *(ICCV 2025)*
+[Project Page](https://dexh2r.github.io/) | [Paper](https://arxiv.org/abs/2506.23152)
+
+
+![image](./images/teaser.jpg)
+
+
+### CVAE for Grasp Pose Prepration and Motion Net for Approaching Motion Generation
+
+Please see [README](https://github.com/wang-youzhuo/DexH2R/blob/main/GraspAndMotionet/README.md) in `GraspAndMotionet` folder.
+
+### Diffusion Policy and Diffusion Policy 3d for Approaching Motion Generation
+
+Please see [README]() in `DiffusionPolicy` folder.
+
+### dataset
+
+coming soon..., dataset is uploading. Due to the large size of our data, it will take some time to transfer the data to Google Drive
+
+
+
+<!-- 
+* Clone this repository:
+```commandline
+git clone git@github.com:wang-youzhuo/DexH2R.git
+```
+1. Create a `dataset` folder under `DexH2R`:
+```commandline
+mkdir data
+```
+2. Download the dataset from [here](), and put them under `dataset`. 
+
+We divided the dataset into individual units, with all the data of each person stored in a single zip file. Each zip file contains all the data from 18 viewpoints across three types of cameras: Kinect, RealSense, and ZCam. Additionally, it includes the qpos of the shadow hand, human hand reconstruction results of the human subject, segmented and clustered point clouds of real-world objects, as well as the object poses at each time step. The detailed file directory structure of each zip file is as follows:
+
+```commandline
+DexH2R
+├── GraspAndMotionet
+├── DiffusionPolicy
+└── dataset
+    ├── DexH2R_dataset
+    │   ├── 0(subject_name)
+    │   │   ├── air_duster(object_name)
+    │   │   │      ├── 0(sequence_index)
+    │   │   │      │   ├── calibration
+    │   │   │      │   ├── kinect
+    │   │   │      │   ├── realsense
+    │   │   │      │   ├── zcam
+    │   │   │      │   ├── (right/left)_mano.pt
+    │   │   │      │   ├── obj_pose.pt
+    │   │   │      │   ├── qpos.pt
+    │   │   │      │   ├── real_obj_pcd_color.pt
+    │   │   │      │   └── real_obj_pcd_xyz.pt
+    │   │   │      └── ...
+    │   │   ├── bathroom_cleaner(object_name)
+    │   │   └── ...
+    │   │
+    │   ├── 1(subject_name) 
+    │   └── ...
+    ├── object_model
+    └── dataset_split.json
+```
+
+To save space, the storage format for all depth images is torch.int16. Please manually change its data type to numpy.uint16 to convert it to the normal format
+
+Download obj_and_data_split.zip from [here](), unzip it in the dataset folder, this zip contains the objects' mesh models and dataset split information
+
+Download shadow hand description.zip from [here](), unzip it in the GraspAndMotionet/assets -->
+
+
+## Citation
+
+```
+@article{wang2025dexh2r,
+  title={DexH2R: A Benchmark for Dynamic Dexterous Grasping in Human-to-Robot Handover},
+  author={Wang, Youzhuo and Ye, Jiayi and Xiao, Chuyang and Zhong, Yiming and Tao, Heng and Yu, Hang and Liu, Yumeng and Yu, Jingyi and Ma, Yuexin},
+  journal={arXiv preprint arXiv: https://arxiv.org/abs/2506.23152},
+  year={2025}
+}
+```
+
+## License
+This work and the dataset are licensed under [CC BY-NC 4.0][cc-by-nc].
+
+[![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png

@@ -1,0 +1,50 @@
+name: affordance_cvae
+
+d_x: 0 # placeholder nothing
+batch_size: ${task.train.batch_size}
+norm:  ${task.dataset.normalize_x}
+hand_surface_point_mse_loss_weight: 10000
+dis_loss_weight: 1000 # 1000
+hand_pose_loss_weight: 10000
+pen_loss_weight: 100 # 100
+# cvae_loss_weight: 10
+
+dataset_name: ${task.dataset.name}
+
+device: cuda
+obj_num_points: ${task.dataset.num_points}
+
+hand_angle_size: 22 # remove the wrist
+hand_trans_size: 3
+hand_param_dim: 25 # origin is 27, now remove the wrist
+
+
+cvae_latent_size: 128
+
+
+encoder_layer_sizes: 
+  - 1024
+  - 1024
+  - 1024
+  - 1024
+  - 512
+  - 512
+  - 256
+
+decoder_layer_sizes:  
+  - 1024
+  - 1024
+  - 1024 
+  - 512
+  - 512
+  - 256
+  - 128
+  - 64
+  - ${model.hand_param_dim}
+
+
+
+
+
+scene_model:
+  name: nothing # place holder

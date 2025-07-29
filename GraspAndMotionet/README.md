@@ -1,0 +1,151 @@
+# Grasp Pose Prepration and Motion Net Code for [ICCV 2025]DexH2R
+This folder contains the Grasp Pose Prepration and the motion net code for DexH2R. For more information about this work, please check [our paper.](https://arxiv.org/abs/2506.23152)
+
+## 🥭 Installation
+Our code is tested on (CentOS Linux release 7.6.1810, cuda 12.1)
+
+* Get into this folder:
+```commandline
+cd GraspAndMotionet
+```
+* Create a [conda](https://www.anaconda.com/) environment and activate it:
+```commandline
+conda create -n dexh2rgrasp python=3.8
+conda activate dexh2rgrasp
+```
+* Install the dependencies:
+```commandline
+conda install pytorch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 pytorch-cuda=12.1 -c pytorch -c nvidia
+conda install -c fvcore -c conda-forge fvcore
+conda install -c iopath iopath
+pip install -r requirements.txt
+mkdir thirdparty & cd thirdparty
+wget https://codeload.github.com/facebookresearch/pytorch3d/zip/refs/tags/v0.7.5 -O pytorch3d-0.7.5.zip
+unzip pytorch3d-0.7.5.zip
+cd pytorch3d-0.7.5
+export FORCE_CUDA=1
+pip install -e .
+```
+download issac gym from [here](https://developer.nvidia.com/isaac-gym/download)
+put it in the thirdparty folder
+```
+cd thirdparty
+tar -xzvf IsaacGym_Preview_4_Package.tar.gz
+cd isaacgym/python
+pip install -e .
+```
+## 🍉 Prepration
+
+Download the Dexgraspnet dataset from [here(coming soon)](), unzip it in the DexH2R/dataset folder
+
+Sample points from object mesh, the result will be put in the dataset folder
+```commandline
+python utils/sample_model_surface_points.py --point_num 4096
+```
+## 🥑 Grasp Pose Prepration
+Before training , please ensure that you set the dataset type and other parameters right in `configs/grasp.yaml` and `configs/task/grasp_gen_ur.yaml`.
+
+
+Train cvae on our dataset or dexgraspnet
+```commandline
+bash scripts/grasp_gen_ur/train_cvae.sh
+```
+
+If you want to train dexgraspanything , please look for the code in the [dexgraspanything repository](https://github.com/4DVLab/DexGrasp-Anything?tab=readme-ov-file)
+
+
+Once your grasping model training is complete, update the configuration file in `configs/grasp.yaml`, choose the model you want to use to generate the final grasping poses for every object model
+
+A sample for `configs/grasp.yaml`
+```commandline
+pretrain_model_dir_path: ./experiment_result/2025-02-11_13-29-00_norm_train_on_dexgraspnet_finetune_on_dynamicgrasp_all_use_pen_dis_loss_meshmodelpcd_continue/ckpts
+pretrain_model_index: 113
+```
+
+Generate final grasping poses for every object
+```commandline
+bash scripts/gen_mesh_model_final_qpose.sh
+```
+Transfer the final pose to every sequence folder
+```commandline
+gen_final_pose/transfer_final_to_motion_data.py
+```
+
+If you want to use the final grasping pose filtered by collision with mano for algorithm evaluation, download the MANO_LEFT.pkl and MANO_RIGHT.pkl from [here](https://github.com/otaheri/MANO), then put them in the assets/mano_model, finally generate the final grasping poses filtered for collisions with MANO using this command.
+
+```commandline
+python mano_collision/filter_mano_collision.py
+```
+
+You can visualize the final grasping pose you generated, by this command
+```commandline
+python gen_final_pose/vis_final_grasp_pose.py --obj_name box --output_dir test_meshes/final_hand_mesh
+```
+
+Generate the results of the model running on the test set
+```
+python test_grasp_quality/gen_grasp_poses_for_test.py
+```
+Test generated results
+```
+python test_grasp_quality/test_grasp.py --eval_dir
+```
+
+
+## 🥥 Motion Net  
+Note that the motion net use the goal grasping pose for its input , while other motion genration algorithms use it in goal pose alignment for test
+
+Train motion net 
+```
+bash scripts/motion_gen/train_motion_net.sh
+```
+
+Once your motion net training is complete, update the configuration file in `configs/motion.yaml`, choose the model you want to use to generate the motion for test or viz 
+
+
+Assign the ckpt you want to genrate motion
+```
+experiment_name=2025-06-26_00-08-34_ 
+pretrain_model_index=269 
+```
+In `viz_motion/gen_motion_net_motion.sh`, assign the interpolation threshold
+5 or 10, 5 means the hard mode, 10 means the easy mode
+```
+task.itp_mode=5 
+```
+Assign the kind of final grasp you want(you must generate it by yourself)
+```
+task.dataset.use_mano_filter_cvae_collision_final_pose=false\
+task.dataset.use_mano_filter_dexgraspanything_collision_final_pose=false \
+task.dataset.use_cvae_final_pose=true \
+task.dataset.use_dexgraspanything_final_pose=false \
+```
+Then run the command below, you can get the result of motion net run on testset
+```
+bash viz_and_test_motion/gen_motion_net_motion.sh
+```
+Evaluate the result of motion net
+```
+python viz_and_test_motion/test_motion_infer_result.py
+```
+
+Output the 3d geometry in the data that the motion net generate 
+```
+python viz_and_test_motion/output_viz_motion_with_one_data.py --data_seq_indice 0
+```
+
+
+Select a good view of data to vizulization
+```
+python viz_and_test_motion/select_cam_view.py
+```
+
+Vizulize the motion generated by the model you trained
+```
+python viz_and_test_motion/viz_data.py --motion_index 0
+```
+
+
+## 🔖ToDo
+
+* CVAE and Motion Net ckpts

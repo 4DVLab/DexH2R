@@ -1,0 +1,39 @@
+
+name: motion_net
+
+input_dim: 7300 # don't need to change, the entrance program will calculate
+# input_dim: 4111 # obs 2
+
+
+future_frames: ${task.dataset.future_frames}
+past_frames: ${task.dataset.past_frames}
+
+use_predict_num: 5
+use_dropout: false
+hand_surface_point_num: 225
+# predict_offsets: true
+qpose_dim: 33
+pcd_num: ${task.dataset.sample_points}
+
+d_x: 0 # placeholder nothing
+batch_size: ${task.train.batch_size}
+
+use_qpose_hand_pcd_loss: false
+use_qpose_loss: true
+
+
+
+# layer_num: 3
+align_to_current_frame: true
+
+
+
+# hand_angle_size: 22 # remove the wrist
+# hand_trans_size: 3
+# hand_param_dim: 25 # origin is 27, now remove the wrist
+remove_wrist: true
+
+
+
+scene_model:
+  name: nothing # place holder

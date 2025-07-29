@@ -1,0 +1,42 @@
+## config/default.yaml
+hydra:
+  run:
+    dir: ${exp_dir}
+  output_subdir: null
+
+defaults:
+  - _self_
+  - diffuser: null
+  - model: null
+  - task: null
+  - optimizer: null
+  - planner: null
+
+
+use_pretrain: false
+
+pretrain_model_dir_path: experiment_result/2025-07-09_19-26-56_pure_dexgraspnet_original_0.01filter/ckpts
+pretrain_model_index: 779
+# pretrain_model_dir_path: experiment_result/2025-07-10_16-19-58_pure_dynamic_grasp/ckpts
+# pretrain_model_index: 179
+
+
+
+exp_name: Scene_diffuser·
+
+output_dir: ./experiment_result
+
+exp_dir: ${output_dir}/${now:%Y-%m-%d_%H-%M-%S}_${exp_name}
+
+tb_dir: ${exp_dir}/tb_logs
+vis_dir: ${exp_dir}/visual
+ckpt_dir: ${exp_dir}/ckpts
+
+slurm: false
+gpu: 0
+
+## for saving model
+save_model_interval: 10
+
+
+grasp_gen_res_save_dir_path: test_meshes/grasp_test_res

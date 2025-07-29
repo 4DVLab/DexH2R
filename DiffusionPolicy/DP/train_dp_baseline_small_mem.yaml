@@ -1,0 +1,252 @@
+_target_: diffusion_policy.workspace.train_dp_baseline_small_mem_workspace.TrainDiffusionUnetHybridWorkspace
+checkpoint:
+  save_last_ckpt: true
+  save_last_snapshot: false
+  topk:
+    format_str: epoch={epoch:04d}-test_mean_score={test_mean_score:.3f}.ckpt
+    k: 5
+    mode: max
+    monitor_key: test_mean_score
+dataloader:
+  batch_size: 256
+  num_workers: 0
+  persistent_workers: false
+  pin_memory: true
+  shuffle: true
+dataset_obs_steps: 2
+ema:
+  _target_: diffusion_policy.model.diffusion.ema_model.EMAModel
+  inv_gamma: 1.0
+  max_value: 0.9999
+  min_value: 0.0
+  power: 0.75
+  update_after_step: 0
+exp_name: default
+horizon: 16
+keypoint_visible_rate: 1.0
+logging:
+  group: null
+  id: null
+  # TODO: change to "online" if syncing wandb
+  mode: offline
+  name: train_dp_baseline_small_mem
+  project: DexH2R
+  resume: false
+  tags:
+  - dp baseline
+  - on our whole dataset
+  - small memory
+  - obs -> rgb, depth, agent_pos
+  - output -> qpose(28-dim)
+multi_run:
+  run_dir: grasp_output/train_diffusion_unet_hybrid_grasp_image
+  wandb_name_base: train_diffusion_unet_hybrid_grasp_image
+n_action_steps: 8
+n_latency_steps: 0
+n_obs_steps: 2
+name: train_diffusion_unet_hybrid
+obs_as_global_cond: true
+optimizer:
+  _target_: torch.optim.AdamW
+  betas:
+  - 0.95
+  - 0.999
+  eps: 1.0e-08
+  lr: 0.0001
+  weight_decay: 1.0e-06
+past_action_visible: false
+policy:
+  _target_: diffusion_policy.policy.dp_baseline_policy.DiffusionUnetHybridImagePolicy
+  cond_predict_scale: true
+  crop_shape:
+  - 100
+  - 200
+  diffusion_step_embed_dim: 128
+  down_dims:
+  - 512
+  - 1024
+  - 2048
+  eval_fixed_crop: true
+  horizon: 16
+  kernel_size: 5
+  n_action_steps: 8
+  n_groups: 8
+  n_obs_steps: 2
+  noise_scheduler:
+    _target_: diffusers.schedulers.scheduling_ddpm.DDPMScheduler
+    beta_end: 0.02
+    beta_schedule: squaredcos_cap_v2
+    beta_start: 0.0001
+    clip_sample: true
+    num_train_timesteps: 100
+    prediction_type: sample
+    variance_type: fixed_small
+  num_inference_steps: 1000
+  obs_as_global_cond: true
+  obs_encoder_group_norm: true
+  shape_meta:
+    action:
+      shape:
+      - 28
+    obs:
+      agent_pos:
+        shape:
+        - 28
+        type: low_dim
+      image:
+        shape:
+        - 3
+        - 180
+        - 320
+        type: rgb
+      depth:
+        shape:
+        - 1
+        - 180
+        - 320
+        type: depth
+shape_meta:
+  action:
+    shape:
+    - 28
+  obs:
+    agent_pos:
+      shape:
+      - 28
+      type: low_dim
+    image:
+      shape:
+      - 3
+      - 180
+      - 320
+      type: rgb
+    depth:
+      shape:
+      - 1
+      - 180
+      - 320
+      type: depth
+task:
+  dataset:
+    _target_: diffusion_policy.dataset.dp_baseline_dataset.dp_baseline_dataset
+    horizon: 16
+    max_train_episodes: 100
+    pad_after: 7
+    pad_before: 1
+    seed: 42
+  # TODO: load the normalizer
+  normalizer:
+    path: './normalizer/dp_normalizer.pth'
+  # TODO: change the 
+  train_dataset:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/whole/train_val.zarr
+    traj_num: 3509
+    train_mask_start: 0
+    train_mask_end: 2888
+    val_mask_start: 2888
+    val_mask_end: 3509
+  train_dataset_1:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_1.zarr
+    traj_num: 963
+    train_mask_start: 0
+    train_mask_end: 963
+    val_mask_start: 0
+    val_mask_end: 0
+  train_dataset_2:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_2.zarr
+    traj_num: 963
+    train_mask_start: 0
+    train_mask_end: 963
+    val_mask_start: 0
+    val_mask_end: 0
+  train_dataset_3:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/train/split/train_3.zarr
+    traj_num: 962
+    train_mask_start: 0
+    train_mask_end: 962
+    val_mask_start: 0
+    val_mask_end: 0
+  val_dataset:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/val/val.zarr
+    traj_num: 621
+    train_mask_start: 0
+    train_mask_end: 621
+    val_mask_start: 0
+    val_mask_end: 0
+  test_dataset:
+    zarr_path: ../../dataset/DiffusionPolicy_dataset/test/test.zarr
+    traj_num: 773
+    train_mask_start: 0
+    train_mask_end: 773
+    val_mask_start: 0
+    val_mask_end: 0
+  env_runner:
+    _target_: diffusion_policy.env_runner.grasp_image_runner.GraspImageRunner
+    fps: 10
+    legacy_test: true
+    max_steps: 300
+    n_action_steps: 8
+    n_envs: null
+    n_obs_steps: 2
+    n_test: 50
+    n_test_vis: 4
+    n_train: 6
+    n_train_vis: 2
+    past_action: false
+    test_start_seed: 100000
+    train_start_seed: 0
+  image_shape:
+  - 3
+  - 180
+  - 320
+  name: grasp_image
+  shape_meta:
+    action:
+      shape:
+      - 28
+    obs:
+      agent_pos:
+        shape:
+        - 28
+        type: low_dim
+      image:
+        shape:
+        - 3
+        - 180
+        - 320
+        type: rgb
+      depth:
+        shape:
+        - 1
+        - 180
+        - 320
+        type: depth
+task_name: grasp_image
+device: cuda:0
+training:
+  checkpoint_every: 1
+  debug: false
+  device: cuda:0
+  gradient_accumulate_every: 1
+  lr_scheduler: cosine
+  lr_warmup_steps: 500
+  max_train_steps: null
+  max_val_steps: null
+  num_epochs: 100
+  resume: false
+  rollout_every: 50
+  sample_every: 5
+  seed: 42
+  tqdm_interval_sec: 1.0
+  use_ema: true
+  val_every: 1
+  subset_num: 3
+val_dataloader:
+  batch_size: 256
+  num_workers: 0
+  persistent_workers: false
+  pin_memory: true
+  shuffle: false
+# if resume, need to fill in checkpoint_path
+resume: false
+checkpoint_path: ""
