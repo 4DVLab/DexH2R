@@ -16,11 +16,9 @@ Please see [README]() in `DiffusionPolicy` folder.
 
 ### dataset
 
-coming soon..., dataset is uploading. Due to the large size of our data, it will take some time to transfer the data to Google Drive
 
 
 
-<!-- 
 * Clone this repository:
 ```commandline
 git clone git@github.com:wang-youzhuo/DexH2R.git
@@ -65,7 +63,7 @@ To save space, the storage format for all depth images is torch.int16. Please ma
 
 Download obj_and_data_split.zip from [here](), unzip it in the dataset folder, this zip contains the objects' mesh models and dataset split information
 
-Download shadow hand description.zip from [here](), unzip it in the GraspAndMotionet/assets -->
+Download shadow hand description.zip from [here](), unzip it in the GraspAndMotionet/assets 
 
 
 ## Citation
