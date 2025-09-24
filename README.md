@@ -27,7 +27,7 @@ git clone git@github.com:wang-youzhuo/DexH2R.git
 ```commandline
 mkdir data
 ```
-2. Download the dataset from [here](), and put them under `dataset`. 
+2. Download the dataset from [here](https://drive.google.com/drive/folders/1dco6ooYR7BWh_ULDX-n5EKZ5FFaU_rVQ?usp=sharing), and put them under `dataset`. 
 
 We divided the dataset into individual units, with all the data of each person stored in a single zip file. Each zip file contains all the data from 18 viewpoints across three types of cameras: Kinect, RealSense, and ZCam. Additionally, it includes the qpos of the shadow hand, human hand reconstruction results of the human subject, segmented and clustered point clouds of real-world objects, as well as the object poses at each time step. The detailed file directory structure of each zip file is as follows:
 
@@ -61,9 +61,9 @@ DexH2R
 
 To save space, the storage format for all depth images is torch.int16. Please manually change its data type to numpy.uint16 to convert it to the normal format
 
-Download obj_and_data_split.zip from [here](), unzip it in the dataset folder, this zip contains the objects' mesh models and dataset split information
+Download obj_and_data_split.zip from [here](https://drive.google.com/file/d/1ybEs6ekTA8zsqayvy6Oho20ZUc5CNanL/view?usp=drive_link), unzip it in the dataset folder, this zip contains the objects' mesh models and dataset split information
 
-Download shadow hand description.zip from [here](), unzip it in the GraspAndMotionet/assets 
+Download shadow hand description.zip from [here](https://drive.google.com/file/d/1frZlH4_1m6d25OhsQzjkp4Y7FGbdGARK/view?usp=drive_link), unzip it in the GraspAndMotionet/assets 
 
 
 ## Citation
