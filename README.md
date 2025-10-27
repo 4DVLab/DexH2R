@@ -65,6 +65,7 @@ Download obj_and_data_split.zip from [here](https://drive.google.com/file/d/1ybE
 
 Download shadow hand description.zip from [here](https://drive.google.com/file/d/1frZlH4_1m6d25OhsQzjkp4Y7FGbdGARK/view?usp=drive_link), unzip it in the GraspAndMotionet/assets 
 
+You can visualize the dataset by GraspAndMotionet/viz_and_test_motion/viz_dataset.py
 
 ## Citation
 
