@@ -67,6 +67,8 @@ Download shadow hand description.zip from [here](https://drive.google.com/file/d
 
 You can visualize the dataset by GraspAndMotionet/viz_and_test_motion/viz_dataset.py
 
+The camera extrinsic parameters folder, the content in the kinect folder, refers to the extrinsic parameters between kinect's camera 0 and other cameras. hand_arm_mesh_to_kinect_pcd_0 refers to the extrinsic parameters between the robotic hand's coordinate system and kinect's camera 0. realsense_to_forearm_index_0 refers to the coordinate transformation between realsense 0 and the shadow hand's forearm (because the realsense and forearm are relatively stationary), and the same applies to realsense_to_forearm_index_1. The file zcam_calibration.json specifies all the extrinsic parameter transformations between zcams, and zcam_to_kinect_transform specifies the coordinate transformation between zcam and kinect's camera 0. For all coordinate transformation relationships, please refer to the file GraspAndMotionet/viz_and_test_motion/viz_dataset.py to obtain specific usage.Retry
+
 ## Citation
 
 ```
