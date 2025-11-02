@@ -1021,9 +1021,8 @@ class IsaacGraspTestForce_shadowhand(BaseTask):
                 object_asset_options.vhacd_params.resolution = 1000000
 
                 object_mesh_path = os.path.join('./../dataset/object_model', f'{self.object_name}.obj')
-                object_urdf_path = os.path.join('/inspurfs/group/mayuexin/wangyzh/DynamicGrasp/training_code/temp/DexH2R/dataset/object_model', f'{self.object_name}.urdf')
+                object_urdf_path = os.path.join('./../dataset/object_model', f'{self.object_name}.urdf')
                 
-
                 obj_asset = self.gym.load_asset(
                     self.sim, '', object_urdf_path, object_asset_options)
                 self.object_mesh = tm.load(object_mesh_path)

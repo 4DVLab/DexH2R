@@ -36,12 +36,16 @@ pip install -e .
 ```
 ## 🍉 Prepration
 
-Download the Dexgraspnet dataset from [here(coming soon)](), unzip it in the DexH2R/dataset folder
+Download the [Dexgraspnet dataset](https://drive.google.com/file/d/1-XoZtsGRAfhoRoVl7FGZWnqxZDKFGP09/view?usp=drive_link), unzip it in the DexH2R/dataset folder
 
 Sample points from object mesh, the result will be put in the dataset folder
 ```commandline
 python utils/sample_model_surface_points.py --point_num 4096
 ```
+Download [shadow_asserts](https://drive.google.com/file/d/1frZlH4_1m6d25OhsQzjkp4Y7FGbdGARK/view?usp=drive_link), unzip it in the DexH2R/GraspAndMotionet/assets folder
+
+For all the URDF files in DexH2R/dataset/object_model folder, you need to change the mesh paths contained within them to the absolute path format on your computer
+
 ## 🥑 Grasp Pose Prepration
 Before training , please ensure that you set the dataset type and other parameters right in `configs/grasp.yaml` and `configs/task/grasp_gen_ur.yaml`.
 
@@ -146,6 +150,3 @@ python viz_and_test_motion/viz_data.py --motion_index 0
 ```
 
 
-## 🔖ToDo
-
-* CVAE and Motion Net ckpts

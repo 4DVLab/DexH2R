@@ -67,8 +67,30 @@ Download shadow hand description.zip from [here](https://drive.google.com/file/d
 
 You can visualize the dataset by GraspAndMotionet/viz_and_test_motion/viz_dataset.py
 
+For all the URDF files in dataset/object_model, you need to change the mesh paths contained within them to the absolute path format on your computer
+
 The camera extrinsic parameters folder, the content in the kinect folder, refers to the extrinsic parameters between kinect's camera 0 and other cameras. hand_arm_mesh_to_kinect_pcd_0 refers to the extrinsic parameters between the robotic hand's coordinate system and kinect's camera 0. realsense_to_forearm_index_0 refers to the coordinate transformation between realsense 0 and the shadow hand's forearm (because the realsense and forearm are relatively stationary), and the same applies to realsense_to_forearm_index_1. The file zcam_calibration.json specifies all the extrinsic parameter transformations between zcams, and zcam_to_kinect_transform specifies the coordinate transformation between zcam and kinect's camera 0. For all coordinate transformation relationships, please refer to the file GraspAndMotionet/viz_and_test_motion/viz_dataset.py to obtain specific usage.
 
+For users training with the Zarr dataset, use the following commands to reassemble and verify the data.
+
+1. Extract All Splits
+This command concatenates the split parts and pipes them directly to tar for extraction.
+```
+# Extract train, test, and validation sets
+cat train.tar.part* | tar -xvf -
+cat test.tar.part* | tar -xvf -
+cat val.tar.part* | tar -xvf -
+```
+2. Verify Data Integrity
+After extraction, use sha256sum to ensure the data is not corrupted.
+
+```
+# Verify all sets
+sha256sum -c train.sha256 > train_check.txt
+sha256sum -c test.sha256 > test_check.txt
+sha256sum -c val.sha256 > val_check.txt
+Note: Check the _check.txt logs. If all files report OK, you are ready to start training.
+```
 ## Citation
 
 ```
