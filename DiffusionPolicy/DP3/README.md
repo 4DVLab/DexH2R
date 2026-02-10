@@ -14,7 +14,7 @@ $ pip install pytransform3d pytorch_kinematics trimesh open3d pillow plotly typi
 For [pytorch3d](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) and [csdf](https://github.com/wrc042/CSDF/blob/main/README.md), follow the instructions on their github repo to install.
 
 ## 📥 Dataset Preparation
-1. Download dataset from [Google Drive]
+1. Download dataset from [Google Drive](https://drive.google.com/drive/folders/1F1Sz4MMr7dW2LvK5QecSayv2Nc4ol97j?usp=drive_link)
 2. Place all dataset files in the `dataset/DiffusionPolicy_dataset` directory
     - Put `train_val.zarr` in `train/whole` folder and put `train_1.zarr`, `train_2.zarr`, `train_3.zarr` in `train/split` folder. 
     - Put `val.zarr` in `val` folder.
