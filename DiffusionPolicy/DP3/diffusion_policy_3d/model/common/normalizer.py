@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from diffusion_policy_3d.common.pytorch_util import dict_apply
 from diffusion_policy_3d.model.common.dict_of_tensor_mixin import DictOfTensorMixin
-
+import os
 
 class LinearNormalizer(DictOfTensorMixin):
     avaliable_modes = ['limits', 'gaussian']
@@ -41,7 +41,10 @@ class LinearNormalizer(DictOfTensorMixin):
                     output_min=output_min,
                     range_eps=range_eps,
                     fit_offset=fit_offset)
-        torch.save(self.params_dict, '/inspurfs/group/mayuexin/zym/based_diffusion_policy/ICCV_DynamicGrasp/nipsalldataset_normalizer.pth')
+    
+        save_dir_path = "./normalizer"
+        os.makedirs(save_dir_path, exist_ok=True)
+        torch.save(self.params_dict, f"{save_dir_path}/normalizer.pth")
     
     def __call__(self, x: Union[Dict, torch.Tensor, np.ndarray]) -> torch.Tensor:
         return self.normalize(x)

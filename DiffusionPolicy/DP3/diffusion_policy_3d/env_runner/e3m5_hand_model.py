@@ -1014,7 +1014,7 @@ class Evaluator:
             "objpcd_normal_intact": batch["objpcd_normal_intact"].squeeze(0),  # [16, 4096, 3]
             "final_grasp_group": batch["final_grasp_group"].squeeze(0),  # [16, 20, 28]
             "traj_index": batch["traj_index"][0, 0],  # [1, 16] -> float
-            "obs_objpcd": obs_dict['point_cloud'].squeeze(0)  # [16, 3, 500]
+            # "obs_objpcd": obs_dict['point_cloud'].squeeze(0)  # [16, 3, 500]
         }
         if velocity_as_obs:
             processed_data["velocity"] = obs_dict["velocity"].squeeze(0) # [1, 16, 28] -> [16, 28]

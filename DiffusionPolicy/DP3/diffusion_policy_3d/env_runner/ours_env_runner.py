@@ -145,13 +145,13 @@ class FastGraspEnvRunner(BaseRunner):
             with tqdm.tqdm(test_dataloader, desc=f"Validation", leave=False, mininterval=1) as tepoch:
                 for batch_idx, batch in enumerate(tepoch):
                     #######################################
-                    point_cloud_data = np.load('/inspurfs/group/mayuexin/zym/based_diffusion_policy/ICCV_DynamicGrasp/point_cloud_batch_0.npy')
-                    point_cloud_data = torch.from_numpy(point_cloud_data).to(device)
-                    point_cloud_data = point_cloud_data[:, :1].repeat(1,10, 1,1)
-                    batch['obs']['point_cloud'] = point_cloud_data
-                    batch['obs_objpcd'] = point_cloud_data
-                    batch['objpcd_intact'] = point_cloud_data
-                    # import pdb; pdb.set_trace()
+                    # point_cloud_data = np.load('/inspurfs/group/mayuexin/zym/based_diffusion_policy/ICCV_DynamicGrasp/point_cloud_batch_0.npy')
+                    # point_cloud_data = torch.from_numpy(point_cloud_data).to(device)
+                    # point_cloud_data = point_cloud_data[:, :1].repeat(1,10, 1,1)
+                    # # batch['obs']['point_cloud'] = point_cloud_data
+                    # # batch['obs_objpcd'] = point_cloud_data
+                    # batch['objpcd_intact'] = point_cloud_data
+                    # # import pdb; pdb.set_trace()
                     #######################################
 
                     processed_data= evaluator.preprocess_batch(batch, device, self.velocity_as_obs, self.finalgrasp_as_obs)
@@ -163,7 +163,7 @@ class FastGraspEnvRunner(BaseRunner):
                     velocity = processed_data["velocity"]
                     final_grasp = processed_data["final_grasp"]
                     final_grasp_group = processed_data["final_grasp_group"]
-                    obs_objpcd = processed_data["obs_objpcd"]
+                    # obs_objpcd = processed_data["obs_objpcd"]
                     ## validation里第一个traj的obs初始化：
                     if metrics["total_infer_frame"] == 0:
                         agent_pos_list = [agent_pos[i,:].unsqueeze(0) for i in range(self.n_obs_steps)] # element shape: [1, 28]  len = 8
@@ -446,14 +446,16 @@ class FastGraspEnvRunner(BaseRunner):
 
                 agent_pos_tensor=torch.cat([obs_dict['agent_pos'][:,:self.n_obs_steps,:6].to(device), zeros_actions, obs_dict['agent_pos'][:,:self.n_obs_steps,6:].to(device)], dim=2)
                 
+                visual_data_export_dir_path = "./visual_data"
+                os.makedirs(visual_data_export_dir_path, exist_ok=True)
                 # 使用 for 循环保存两个手的模型
                 for step in range(self.n_obs_steps):
                     # 保存 agent_pos 对应的手模型
                     hand_mesh_agent = hand_model.get_meshes_from_q(q=agent_pos_tensor[0, :, :], i=step)
-                    hand_mesh_agent.export(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/hand_agent_{batch_idx+step}.ply")  # 保存为 PLY 文件，文件名包含步骤索引
+                    hand_mesh_agent.export(f"{visual_data_export_dir_path}/hand_agent_{batch_idx+step}.ply")  # 保存为 PLY 文件，文件名包含步骤索引
 
                     infer_hand_mesh_i = hand_model.get_meshes_from_q(q=pred_q_tensor[0, :, :], i=step)
-                    infer_hand_mesh_i.export(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/pred_hand_{batch_idx+step}.ply")
+                    infer_hand_mesh_i.export(f"{visual_data_export_dir_path}/pred_hand_{batch_idx+step}.ply")
                     # 获取当前点云数据
                     point_cloud = obs_dict['point_cloud'][0, step, 6:].detach().cpu().numpy()  # 获取第 step 个点云数据并转换为 NumPy 数组
                     # point_cloud 现在是形状为 (4090, 3)
@@ -469,12 +471,12 @@ class FastGraspEnvRunner(BaseRunner):
                 """
 
                     # 将点云数据转换为字符串格式
-                    point_cloud_data = "\n".join(" ".join(map(str, point)) for point in point_cloud)
+                    point_cloud_data_save = "\n".join(" ".join(map(str, point)) for point in point_cloud)
 
                     # 保存为 PLY 文件
-                    with open(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/point_cloud_{batch_idx + step}.ply", "w") as f:
+                    with open(f"{visual_data_export_dir_path}/point_cloud_{batch_idx + step}.ply", "w") as f:
                         f.write(ply_header)
-                        f.write(point_cloud_data + "\n")  # 确保最后有一个换行符
+                        f.write(point_cloud_data_save + "\n")  # 确保最后有一个换行符
                 # print('action:',action)
                 done = True
         log_data = dict()

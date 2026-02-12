@@ -382,14 +382,16 @@ class FastGraspEnvRunner(BaseRunner):
 
                 agent_pos_tensor=torch.cat([obs_dict['agent_pos'][:,:self.n_obs_steps,:6].to(device), zeros_actions, obs_dict['agent_pos'][:,:self.n_obs_steps,6:].to(device)], dim=2)
                 
+                visual_data_export_dir_path = "./visual_data"
+                os.makedirs(visual_data_export_dir_path, exist_ok=True)
                 # 使用 for 循环保存两个手的模型
                 for step in range(self.n_obs_steps):
                     # 保存 agent_pos 对应的手模型
                     hand_mesh_agent = hand_model.get_meshes_from_q(q=agent_pos_tensor[0, :, :], i=step)
-                    hand_mesh_agent.export(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/hand_agent_{batch_idx+step}.ply")  # 保存为 PLY 文件，文件名包含步骤索引
+                    hand_mesh_agent.export(f"{visual_data_export_dir_path}/hand_agent_{batch_idx+step}.ply")  # 保存为 PLY 文件，文件名包含步骤索引
 
                     infer_hand_mesh_i = hand_model.get_meshes_from_q(q=pred_q_tensor[0, :, :], i=step)
-                    infer_hand_mesh_i.export(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/pred_hand_{batch_idx+step}.ply")
+                    infer_hand_mesh_i.export(f"{visual_data_export_dir_path}/pred_hand_{batch_idx+step}.ply")
                     # 获取当前点云数据
                     point_cloud = obs_dict['point_cloud'][0, step, 6:].detach().cpu().numpy()  # 获取第 step 个点云数据并转换为 NumPy 数组
                     # point_cloud 现在是形状为 (4090, 3)
@@ -408,7 +410,7 @@ class FastGraspEnvRunner(BaseRunner):
                     point_cloud_data = "\n".join(" ".join(map(str, point)) for point in point_cloud)
 
                     # 保存为 PLY 文件
-                    with open(f"/inspurfs/group/mayuexin/zym/based_diffusion_policy/3D-Diffusion-Policy/visual_data/point_cloud_{batch_idx + step}.ply", "w") as f:
+                    with open(f"{visual_data_export_dir_path}/point_cloud_{batch_idx + step}.ply", "w") as f:
                         f.write(ply_header)
                         f.write(point_cloud_data + "\n")  # 确保最后有一个换行符
                 # print('action:',action)
