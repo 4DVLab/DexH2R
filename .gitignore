@@ -53,7 +53,7 @@ mano_collision/viz
 datasets/lemo
 viz_motion/ex_dir_path_list
 
-dataset
+./dataset
 assets
 experiment_result
 viz_motion_output
